@@ -1,5 +1,6 @@
 import db from "../database/db.js"
 import bcrypt from "bcrypt"
+import { v4 as uuid } from "uuid"
 
 export async function postSignUp (req, res) {
     const { email, name } = req.body
@@ -24,9 +25,25 @@ export async function postSignUp (req, res) {
 }
 
 export async function postSignIn (req, res) {
-    try {
+    const { email, password } = req.body
 
-    } catch (err) {
-        res.status(500).send(err.message)
+    const user = await db.collection("signUps").findOne({ email })
+    
+    if (user && bcrypt.compareSync(password, user.password)) {
+        const token = uuid()
+
+        await db.collection("sessions").insertOne({
+            userId: user._id,
+            token
+        })
+
+        const resObj = {
+            token,
+            name: user.name
+        }
+
+        res.status(200).send(resObj)
+    } else {
+        res.status(401).send("Senha e/ou email inválido.")
     }
 }
