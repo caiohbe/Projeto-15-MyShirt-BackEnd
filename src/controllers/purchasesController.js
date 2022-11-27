@@ -5,7 +5,7 @@ export async function getPurchases(req, res) {
     const user = res.locals.token
     console.log(user)
     try {
-        const purchases = db.collections("purchases").find({user: user}).toArray()
+        const purchases = db.collection("purchases").find({user: user}).toArray()
         res.send(purchases)
     } catch (err) {
         res.status(500).send(err.message)
