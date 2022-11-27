@@ -6,6 +6,6 @@ export function validateToken (req, res, next) {
         res.status(404).send("Token indisponível.")
         return
     }
-
+    res.locals.token = token;
     next()
 }

@@ -6,5 +6,6 @@ export async function getProducts (req, res) {
         res.send(produtos)
     } catch (err) {
         res.status(500).send(err.message)
+        return
     }
 }
